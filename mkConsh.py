@@ -27,7 +27,7 @@ sys.stdin.close()
 
 try:
   file = open("connStats.sh", "w")
-  file.write("python3 mloginfo.py --connstats "+temp.name)
+  file.write(os.environ['PYTHON_BIN']+' '+os.environ['MSHELL']+'/'+'mloginfo.py --connstats '+temp.name)
   file.close()
 
 except:

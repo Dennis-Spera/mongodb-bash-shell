@@ -1,6 +1,56 @@
 ## The enclosed commands are designed to closely integrate with other shell commands. The logic being what if the linux distribution had these commands built into it.
 
-**Exaample 1**
+**Setup**
+
+install locally
+----------------------
+
+
+```bash
+git clone https://github.com/Dennis-Spera/mongodb-bash-shell.git
+cd mongodb-bash-shell
+bash mkSetup.sh
+```
+
+**Virtual environment**
+
+**Add to your working environment**
+
+copy contents to the end of your profile
+restart shell
+
+**Inventory of scripts**
+
+scripts:
+
+ 1. **appName.py** - a list of all the apps for the specified time period.
+ 2. **avgMillis.py** - the average of milliseconds for all commands during a given time period.
+ 3. **bytesRead.py** - sort json by bytes read
+ 4. **code.sh** - called by vscode.py to call vscode
+ 5. **collScans.py** - list json that is a collection scan
+ 6. **convertLogs.py** - this is a cloned copy of generate_mplot_logs.py modified to enable pipelineing
+ 7. **countCommands.py** - give a count of different commands for a given time period - (beta)
+ 8. **docsExamined.py** - sort json by docsExamined
+ 9. **drivers.py** - aggegate counts for all drivers used during a time period
+10. **formatOne.py** - format the piped json displaying releavant data stripping off unnecessary data 
+11. **jsonFetcher.py** - returns all the json that fall between a begin date and end date
+12. **keysExamined.py** - sort json by keysExamined
+13. **lv.py** - optimize the time it takes lv to load
+14. **millis.py** - sort json by milliseconds
+15. **mkConsh.py** - makes shell script used to extract connection info
+16. **mkRSsh.py** - makes shell script used to extract replication info
+17. **mkSetup.sh** - makes the environment for appending to your profile
+18. **mplot.py** - execute `mplotqueries.py` based on piped input
+19. **nsIndexes.py** - list the indexes used by namespace with a count
+20. **ns.py** - sort json by namespace
+21. **phead.py** - the installed head command sends a `SIGTERM` to cat command, this is the python version
+22. **queryHash.py** - list query shapes (query shapes) and counts
+23. **README.md** - this file
+24. **vscode.py** - pipe standard out to a vscode tab
+
+
+
+**Example 1**
 
 logic: using the linux `cat` function pipe the contents of the mongod logs into the jsonFetcher which will use datetime
  to calculate which json entries correspond to the specified dateframe and then pass that to the linux `wc -l` command
@@ -11,7 +61,7 @@ logic: using the linux `cat` function pipe the contents of the mongod logs into 
 
 395596
 ```
-**Exaample 2**
+**Example 2**
 
 logic: using the linux `cat` function pipe the contents of the mongod logs into the jsonFetcher which will use datetime
  to calculate which json entries correspond to the specified dateframe and then pass that to countCommands which calculates
@@ -301,7 +351,7 @@ logic: using the linux `cat` function pipe the contents of the mongod logs into 
 % cat mongodb.log.2024-06-11T02-49-10 | jsonFetcher -b 20240101000000 -e 20250101000000 |  convertLogs | mplot
 ```
 
-**Example 11 - piping into multiple filters collScans, millis -- collections scans sorted by millisreconds high to low**
+**Example 12 - piping into multiple filters collScans, millis -- collections scans sorted by millisreconds high to low**
 
 logic: using the linux `cat` function pipe the contents of the mongod logs into the jsonFetcher which will use datetime
  to calculate which json entries correspond to the specified time frame and then pass that to collScans to millis to phead 
@@ -358,27 +408,193 @@ remote               = 192.168.240.197:23892
 bytesRead            = 107417041
 -----------------------------------------------------------------------------------------------------
 ```
+**Example 13 - piping into multiple filters collScans, millis -- collections scans sorted by millisreconds high to low**
 
+logic: using the linux `cat` function pipe the contents of the mongod logs into the jsonFetcher which will use datetime
+ to calculate which json entries correspond to the specified time frame and then pipe that to drivers and pipe to vscode
 
-
-# Add to your bash shell
 ```bash
-export MSHELL=/home/kadmin/Dropbox/python/vcode-loader
-export PYTHON_BIN=python3
-alias jsonFetcher='$PYTHON_BIN $MSHELL/jsonFetcher.py'
-alias countCommands='$PYTHON_BIN $MSHELL/countCommands.py'
-alias millis='$PYTHON_BIN $MSHELL/millis.py'
-alias formatOne='$PYTHON_BIN $MSHELL/formatOne.py'
-alias vscode='$PYTHON_BIN $MSHELL/vscode.py'
-alias avgMillis='$PYTHON_BIN $MSHELL/avgMillis.py'
-alias bytesRead='$PYTHON_BIN $MSHELL/bytesRead.py'
-alias phead='$PYTHON_BIN $MSHELL/phead.py'
-alias appName='$PYTHON_BIN $MSHELL/appName.py'
-alias docsExamined='$PYTHON_BIN $MSHELL/docsExamined.py'
-alias keysExamined='$PYTHON_BIN $MSHELL/keysExamined.py'
-alias convertLogs='$PYTHON_BIN $MSHELL/convertLogs'
-alias mkConsh='$PYTHON_BIN $MSHELL/mkConsh.py'
-alias mkRSsh='$PYTHON_BIN $MSHELL/mkRSsh.py'
-alias mplot='$PYTHON_BIN $MSHELL/mplot.py'
-alias collScans='$PYTHON_BIN $MSHELL/collScans.py'
+% cat *mongodb.log* | jsonFetcher -b 20240101000000 -e 20250101000000 | drivers | vscode
+
+     Count   Driver    
+     -----   ----------------------
+    186735   mongo-java-driver|reactive-streams <version> 4.10.2
+     58165   mongo-go-driver <version> v1.12.0-cloud
+     33798   mongo-csharp-driver <version> 2.19.1.0
+     21720   mongo-go-driver <version> v1.11.3
+     19218   mongo-java-driver|sync|spring-boot <version> 4.4.2
+      3803   mongo-go-driver <version> v1.12.1
+       407   mongo-csharp-driver <version> 2.21.0.0
+       116   nodejs <version> 6.7.0
+        94   NetworkInterfaceTL <version> 5.0.26
+        90   mongo-java-driver|reactive-streams|scala <version> 4.10.2
+        85   mongo-java-driver|reactive-streams|spring-boot <version> 4.11.1
+        70   mongo-go-driver <version> v1.10.3
+        56   nodejs <version> 4.13.0
+        50   mongo-java-driver|sync|spring-boot <version> 4.11.1
+        45   nodejs|mongosh <version> 4.12.1
+        39   nodejs <version> 5.8.1
+        34   mongo-java-driver|sync <version> 4.7.2-s3t
+        32   MongoDB Internal Client <version> 4.2.6-18-g6cdb6ab
+        31   nodejs <version> 5.6.0
+        29   NetworkInterfaceTL-MirrorMaestro <version> 6.0.15
+        14   nodejs <version> 6.5.0
+        14   MongoDB Internal Client <version> 5.0.26
+        14   mongo-java-driver|reactive-streams <version> 4.4.2
+        13   nodejs <version> 4.3.0
+        13   mongo-java-driver|sync <version> 4.4.2
+        12   nodejs <version> 6.1.0
+        10   mongo-java-driver|legacy <version> 5.1.0
+         8   nodejs <version> 6.3.0
+         8   nodejs <version> 6.0.0
+         4   NetworkInterfaceTL <version> 4.2.6-18-g6cdb6ab
+         3   mongo-go-driver <version> v1.11.7
+         3   MongoDB Internal Client <version> 6.0.16
+         2   NetworkInterfaceTL-ReplNetwork <version> 6.0.16
+         2   NetworkInterfaceTL-ReplicaSetMonitor-TaskExecutor <version> 6.0.16
+         2   mongo-java-driver|reactive-streams|spring-boot <version> 5.0.1
+         1   NetworkInterfaceTL-ReplCoordExternNetwork <version> 6.0.16
+         1   NetworkInterfaceTL-MirrorMaestro <version> 6.0.16
+```
+
+**Example 14 - piping into lv**
+
+logic: using the linux `cat` function pipe the contents of the mongod logs into the jsonFetcher which will use datetime
+ to calculate which json entries correspond to the specified time frame and then pipe that to the lv program
+
+```bash
+% cat *mongodb.log* | jsonFetcher -b 20240101000000 -e 20250101000000 | lvv
+```
+
+**Example 15 - sorting by namespace**
+
+logic: using the linux `cat` function pipe the contents of the mongod logs into the jsonFetcher which will use datetime
+ to calculate which json entries correspond to the specified time frame and then pipe that to millis to sort to milliseconds
+ then pipe to phead to select the top 10 in milliseconds and then pipe that into ns to sort by namespace, format the output
+ and then cast it to a vscode tab.
+
+
+
+```bash
+% cat mongodb.log | jsonFetcher -b 20240101000000 -e 20250101000000 | millis | phead -r 10 | ns | formatOne | vscode
+
+Submission Time      = 2024-07-11T22:59:43.365+00:00
+command              = {'update': 'projectLinks', 'ordered': True, 'writeConcern': {'w': 'majority'}, 'txnNumber': 3, '$db': 'document360-prod', 'lsid': {'id': {'$uuid': 'f037dd6e-d300-44f5-8688-ab5b3b7d582f'}}, '$clusterTime': {'clusterTime': {'$timestamp': {'t': 1720738578, 'i': 5}}, 'signature': {'hash': {'$binary': {'base64': 'Dsh/efMxg0pB0B8F/6iZI/g8JE4=', 'subType': '0'}}, 'keyId': 7356413323094523906}}}
+
+
+ns|name space        = document360-prod.$cmd
+numYields            = 516
+durationMillis       = 204474
+remote               = 10.0.32.253:37082
+-----------------------------------------------------------------------------------------------------
+
+Submission Time      = 2024-07-11T22:59:07.099+00:00
+command              = {'update': 'projectLinks', 'ordered': True, 'writeConcern': {'w': 'majority'}, 'txnNumber': 3, '$db': 'document360-prod', 'lsid': {'id': {'$uuid': '72d8af67-c9ca-47c1-aa4d-8269f4e17b28'}}, '$clusterTime': {'clusterTime': {'$timestamp': {'t': 1720738581, 'i': 24}}, 'signature': {'hash': {'$binary': {'base64': 'I4ImT5i6Dj/B9hIapMexo+MR50A=', 'subType': '0'}}, 'keyId': 7356413323094523906}}}
+
+
+ns|name space        = document360-prod.$cmd
+numYields            = 395
+durationMillis       = 165617
+remote               = 10.0.32.253:58722
+-----------------------------------------------------------------------------------------------------
+
+Submission Time      = 2024-07-11T22:58:55.188+00:00
+command              = {'update': 'projectLinks', 'ordered': True, 'writeConcern': {'w': 'majority'}, 'txnNumber': 14, '$db': 'document360-prod', 'lsid': {'id': {'$uuid': '27a12ed4-5486-4765-965c-dc5467c743a2'}}, '$clusterTime': {'clusterTime': {'$timestamp': {'t': 1720738575, 'i': 4}}, 'signature': {'hash': {'$binary': {'base64': 'WmqJozjP2bm8/Fi564bWDFqLGkU=', 'subType': '0'}}, 'keyId': 7356413323094523906}}}
+
+
+ns|name space        = document360-prod.$cmd
+numYields            = 385
+durationMillis       = 159284
+remote               = 10.0.32.253:58706
+-----------------------------------------------------------------------------------------------------
+
+Submission Time      = 2024-07-11T22:58:43.926+00:00
+command              = {'update': 'projectLinks', 'ordered': True, 'writeConcern': {'w': 'majority'}, 'txnNumber': 2, '$db': 'document360-prod', 'lsid': {'id': {'$uuid': 'bae8a197-0ea0-4d40-9bc1-97bd76b4df66'}}, '$clusterTime': {'clusterTime': {'$timestamp': {'t': 1720738563, 'i': 7}}, 'signature': {'hash': {'$binary': {'base64': 'VFDTXzrrtkp1TMtYwx2mPLL2gXw=', 'subType': '0'}}, 'keyId': 7356413323094523906}}}
+
+
+ns|name space        = document360-prod.$cmd
+numYields            = 383
+durationMillis       = 159282
+remote               = 10.0.32.253:37160
+-----------------------------------------------------------------------------------------------------
+
+Submission Time      = 2024-07-11T22:59:43.727+00:00
+command              = {'update': 'projectLinks', 'ordered': True, 'writeConcern': {'w': 'majority'}, 'txnNumber': 3, '$db': 'document360-prod', 'lsid': {'id': {'$uuid': '27025059-87c8-46aa-8df7-3b7dabc7195d'}}, '$clusterTime': {'clusterTime': {'$timestamp': {'t': 1720738624, 'i': 8}}, 'signature': {'hash': {'$binary': {'base64': '1XEM2NkuuFQNlxv6IuiCdjRqoWg=', 'subType': '0'}}, 'keyId': 7356413323094523906}}}
+
+
+ns|name space        = document360-prod.$cmd
+numYields            = 401
+durationMillis       = 158489
+remote               = 10.0.32.253:43536
+-----------------------------------------------------------------------------------------------------
+
+Submission Time      = 2024-07-11T22:59:41.902+00:00
+command              = {'update': 'projectLinks', 'ordered': True, 'writeConcern': {'w': 'majority'}, 'txnNumber': 1, '$db': 'document360-prod', 'lsid': {'id': {'$uuid': '8421f509-ab3d-46c5-bd95-aeeb56f92bad'}}, '$clusterTime': {'clusterTime': {'$timestamp': {'t': 1720738623, 'i': 3}}, 'signature': {'hash': {'$binary': {'base64': 'FRr8w8ha1WnCSjFYhE7GbTc0Lqo=', 'subType': '0'}}, 'keyId': 7356413323094523906}}}
+
+
+ns|name space        = document360-prod.$cmd
+numYields            = 401
+durationMillis       = 157788
+remote               = 10.0.32.252:52470
+-----------------------------------------------------------------------------------------------------
+
+Submission Time      = 2024-07-11T22:59:35.482+00:00
+command              = {'update': 'projectLinks', 'ordered': True, 'writeConcern': {'w': 'majority'}, 'txnNumber': 2, '$db': 'document360-prod', 'lsid': {'id': {'$uuid': '5ae75814-d185-4f73-ae17-13e953eb6989'}}, '$clusterTime': {'clusterTime': {'$timestamp': {'t': 1720738620, 'i': 1}}, 'signature': {'hash': {'$binary': {'base64': '3xfHBWZDnFhhkhUa2NC/AYds8FM=', 'subType': '0'}}, 'keyId': 7356413323094523906}}}
+
+
+ns|name space        = document360-prod.$cmd
+numYields            = 382
+durationMillis       = 155260
+remote               = 10.0.32.253:58670
+-----------------------------------------------------------------------------------------------------
+
+Submission Time      = 2024-07-11T22:59:24.508+00:00
+command              = {'update': 'projectLinks', 'ordered': True, 'writeConcern': {'w': 'majority'}, 'txnNumber': 62, '$db': 'document360-prod', 'lsid': {'id': {'$uuid': '2ea9359f-03f6-481a-87be-922e63df487c'}}, '$clusterTime': {'clusterTime': {'$timestamp': {'t': 1720738621, 'i': 6}}, 'signature': {'hash': {'$binary': {'base64': '2DxBZS/w5o/1HpOqUJVux4ex5DE=', 'subType': '0'}}, 'keyId': 7356413323094523906}}}
+
+
+ns|name space        = document360-prod.$cmd
+numYields            = 343
+durationMillis       = 142111
+remote               = 10.0.32.252:52410
+-----------------------------------------------------------------------------------------------------
+
+Submission Time      = 2024-07-11T22:58:22.466+00:00
+command              = {'update': 'projectLinks', 'ordered': True, 'writeConcern': {'w': 'majority'}, 'txnNumber': 23, '$db': 'document360-prod', 'lsid': {'id': {'$uuid': '27b118c2-0ec4-474f-befa-4111316c653f'}}, '$clusterTime': {'clusterTime': {'$timestamp': {'t': 1720738560, 'i': 1}}, 'signature': {'hash': {'$binary': {'base64': 'X4Q0w63atcCLsOcmeMzpct837g0=', 'subType': '0'}}, 'keyId': 7356413323094523906}}}
+
+
+ns|name space        = document360-prod.$cmd
+numYields            = 349
+durationMillis       = 139479
+remote               = 10.0.32.253:57798
+-----------------------------------------------------------------------------------------------------
+
+Submission Time      = 2024-07-11T22:59:00.481+00:00
+command              = {'update': 'projectLinks', 'ordered': True, 'writeConcern': {'w': 'majority'}, 'txnNumber': 5, '$db': 'document360-prod', 'lsid': {'id': {'$uuid': '5deb97e5-448d-4bd8-b352-6197d8578e22'}}, '$clusterTime': {'clusterTime': {'$timestamp': {'t': 1720738600, 'i': 8}}, 'signature': {'hash': {'$binary': {'base64': 'll0VhwSMy4G+O930tijUvxqnldg=', 'subType': '0'}}, 'keyId': 7356413323094523906}}}
+
+
+ns|name space        = document360-prod.$cmd
+numYields            = 333
+durationMillis       = 139215
+remote               = 10.0.32.253:37098
+-----------------------------------------------------------------------------------------------------
+
+```
+
+**Example 16 - sorting by namespace**
+
+logic: using the linux `cat` function pipe the contents of the mongod logs into the jsonFetcher which will use datetime
+ to calculate which json entries correspond to the specified time frame and then pipe that to indexes to get indexes by 
+ namespace and count and then cast it to a vscode tab.
+
+```bash
+% cat mongodb.log | jsonFetcher -b 20240101000000 -e 20250101000000 | indexes | vscode
+
+**Index Aggregations** 
+
+Name Space                                Index                                                              Count 
+----------------------------------------  ----------------------------------------                      ---------- 
+document360-prod.versions                 IXSCAN { _id: 1 }                                                    118 
+document360-prod.versions                 IDHACK                                                                26 
+document360-prod.variable                 IXSCAN { projectId: 1, createdAt: -1 }                                10 
+document360-prod.users                    IXSCAN { emailId: 1 }                                              11899 
 ```

@@ -15,8 +15,7 @@
   1. notify when there is no stdin
 """
 
-import tempfile
-import sys, os
+import tempfile, sys, subprocess
 
 tempfile.tempdir = "/tmp"
 temp = tempfile.NamedTemporaryFile('w',delete=False)
@@ -28,6 +27,6 @@ sys.stdin.close()
 temp.close()
 
 try:
- os.system('code'+' '+temp.name)
+  subprocess.run(["code", temp.name])
 except:
- sys.stderr.write('code could not be executed, check vscode setup')
+  subprocess.run(["bash", "code.sh", temp.name])  

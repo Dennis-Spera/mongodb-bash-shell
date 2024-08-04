@@ -30,7 +30,7 @@ sys.stdin.close()
 
 try:
   file = open("rsInfo.sh", "w")
-  file.write("python3 mloginfo.py --rsinfo "+temp.name)
+  file.write(os.environ['PYTHON_BIN']+' '+os.environ['MSHELL']+'/'+'mloginfo.py --rsinfo '+temp.name)
   file.close()
 
 except:
