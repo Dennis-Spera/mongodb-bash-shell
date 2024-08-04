@@ -7,6 +7,14 @@ install locally
 
 
 ```bash
+# Create the virtual environment
+pip install virtualenv
+mkdir mshell
+cd mshell
+python3 -m venv mongo-shell
+source bin/activate
+
+# clone respository
 git clone https://github.com/Dennis-Spera/mongodb-bash-shell.git
 cd mongodb-bash-shell
 bash mkSetup.sh
@@ -57,7 +65,7 @@ logic: using the linux `cat` function pipe the contents of the mongod logs into 
  calculating the count of records for the specified dateframe.
 
 ```bash
-% cat mongodb.log.2024-06-11T02-49-10 | jsonFetcher -b 20240601000000 -e 20240630000000 | wc -l
+% cat mongodb.log | jsonFetcher -b 20200601000000 -e 20250630000000 | wc -l
 
 395596
 ```
@@ -68,14 +76,8 @@ logic: using the linux `cat` function pipe the contents of the mongod logs into 
  the count for different commands based on the timeframe.
 
 ```bash
-% cat mongodb.log.2024-06-11T02-49-10 |  jsonFetcher -b 20240601000000 -e 20240630000000 | countCommand
+% cat mongodb.log |  jsonFetcher -b 20200601000000 -e 20250630000000 | countCommands | vscode
 
-Count of find commands     = 5
-Count of delete commands   = 0
-Count of insert commands   = 1
-Count of upsert commands   = 0
-Count of update commands   = 1
-Count of getmore commands  = 0
 ```
 
 **Example 3**
@@ -85,33 +87,8 @@ logic: using the linux `cat` function pipe the contents of the mongod logs into 
  sort based on durationMillis and pipe that to formatOne which will present the json in a more readable format
 
 ```bash
-% cat mongodb.log.2024-06-11T02-49-10 | jsonFetcher -b 20240601000000 -e 20240630000000 | millis | formatOne
+% cat mongodb.log |  jsonFetcher -b 20200601000000 -e 20250630000000 | millis | formatOne | vscode
 
------------------------------------------------------------------------------------------------------
-
-Submission Time      = 2024-06-10T22:09:17.573+00:00
-command              = {'find': 'things', 'filter': {'pid': 'd88163f2-53de-4717-ad95-9ebe0c2d3cba'}, 'sort': {'sn': 1}, 'limit': 1, 'batchSize': 1, 'singleBatch': True, 'maxTimeMS': 1000, '$readPreference': {'mode': 'secondaryPreferred'}, 'readConcern': {'level': 'local'}, '$db': 'mongo-prod'}
-
-
-ns|name space        = mongo-prod.things
-planSummary          = IXSCAN { pid: 1, sn: -1, ts: -1 }
-keysExamined         = 1
-docsExamined         = 1
-queryHash            = 64040B05
-numYields            = 0
-nreturned            = 1
-durationMillis       = 39
-remote               = 192.168.242.223:59302
-bytesRead            = 26832
------------------------------------------------------------------------------------------------------
-```
-
-**Example 4**
-
-logic: The same logic as sample 3 except instead of going to stdout load directly to a vscode tab
-
-```bash
-% cat mongodb.log.2024-06-11T02-49-10 | jsonFetcher -b 20240601000000 -e 20240630000000 | millis | formatOne | vscode
 ```
 
 **Example 5**
@@ -119,9 +96,8 @@ logic: The same logic as sample 3 except instead of going to stdout load directl
 logic: Compile the average durationMillis for a given  time period and cast the output to a vscode tab
 
 ```bash
-% cat mongodb.log.2024-06-11T02-49-10 | jsonFetcher -b 20240601000000 -e 20240630000000 | avgMillis | vscode
+% cat mongodb.log |  jsonFetcher -b 20200601000000 -e 20250630000000 | avgMillis | vscode
 
-The average time for commands:  54.5 ms
 ```
 
 **Example 6**
@@ -132,39 +108,8 @@ logic: using the linux `cat` function pipe the contents of the mongod logs into 
  which will present the json in a more readable format and then pipe that to a vscode tab instead of stdout
 
 ```bash
-% cat mongodb.log.2024-06-11T02-49-10 | jsonFetcher -b 20240601000000 -e 20240630000000 | bytesRead | phead -r 2 | formatOne | vscode
+% cat mongodb.log |  jsonFetcher -b 20200601000000 -e 20250630000000 | bytesRead | phead -r 2 | formatOne | vscode
 
-Submission Time      = 2024-06-10T13:51:23.220+00:00
-command              = {'find': 'things_journal', 'filter': {'$and': [{'pid': 'thing:io.beyonnex.smartheating.srt:eui001bc507316c3aed'}, {'to': {'$gte': 12396}}, {'from': {'$lte': 12496}}]}, 'sort': {'to': 1}, 'batchSize': 1, 'singleBatch': True, 'maxTimeMS': 1000, '$readPreference': {'mode': 'secondaryPreferred'}, 'readConcern': {'level': 'local'}, '$db': 'ddm-mongo-prod'}
-
-
-ns|name space        = ddm-mongo-prod.things_journal
-planSummary          = IXSCAN { pid: 1, to: -1 }
-keysExamined         = 15
-docsExamined         = 15
-queryHash            = BAB5A1C8
-numYields            = 3
-nreturned            = 0
-durationMillis       = 44
-remote               = 192.168.242.223:39838
-bytesRead            = 1660576
------------------------------------------------------------------------------------------------------
-
-Submission Time      = 2024-06-10T13:51:23.220+00:00
-command              = {'find': 'things_journal', 'filter': {'$and': [{'pid': 'thing:io.beyonnex.smartheating.srt:eui001bc507316c3aed'}, {'to': {'$gte': 12396}}, {'from': {'$lte': 12496}}]}, 'sort': {'to': 1}, 'batchSize': 1, 'singleBatch': True, 'maxTimeMS': 1000, '$readPreference': {'mode': 'secondaryPreferred'}, 'readConcern': {'level': 'local'}, '$db': 'ddm-mongo-prod'}
-
-
-ns|name space        = ddm-mongo-prod.things_journal
-planSummary          = IXSCAN { pid: 1, to: -1 }
-keysExamined         = 15
-docsExamined         = 15
-queryHash            = BAB5A1C8
-numYields            = 3
-nreturned            = 0
-durationMillis       = 44
-remote               = 192.168.242.223:39838
-bytesRead            = 1660576
------------------------------------------------------------------------------------------------------
 ```
 
 **Example 7**
@@ -174,43 +119,8 @@ logic: using the linux `cat` function pipe the contents of the mongod logs into 
  with their count.
 
 ```bash
-% cat mongodb.log.2024-06-11T02-49-10 | jsonFetcher -b 20240601000000 -e 20240630000000 | appName | vscode
+% cat mongodb.log |  jsonFetcher -b 20200601000000 -e 20250630000000 | appName | vscode
 
-
-     Count   App Name  
-     -----   ----------------------
-     14953   Document360-UserWebsite
-      5207   API       
-      4134   AlgoliaIndexGenerator
-      1236   APIHub    
-       991   mongot initial sync and session refresh
-       616   BrokenLinkAnalytics.LinkIdentifier
-       358   Admin-WebAPI
-       224   Document360-KB-API
-        94   mongosync, v: 1.4.1, i: coordinator, cl: src, cm: 16875b92, g: go1.19.10, cp: gc, p: 0776473c-39cb-4075-954c-31aee2c9f532
-        87   mongot steady state
-        78   OplogFetcher
-        22   MongoDB CPS Module v13.17.2.8878 (git: 70c0b932f47f4f0b3e82a75e223f39ed9635b47f)
-        22   app-services|triggers-qugyd
-        21   ExportPDF 
-        12   Studio 3T 
-        10   AuditingNotificationGenerator
-         9   MongoDB Compass
-         9   MongoDB Automation Agent v13.17.2.8878 (git: 70c0b932f47f4f0b3e82a75e223f39ed9635b47f)
-         8   DailyJobs 
-         5   mongosh 1.6.1
-         4   mongoexport
-         4   Identity  
-         3   ImportExportJobs
-         3   app-services|crm_api-vgkne
-         3   MongoDB Automation Agent v13.16.2.8826 (git: 36d72fa13b663f402e1285ab8458536766897530)
-         1   LinkStatusChecker
-         1   app-services|crm_triggers-kvvub
-         1   AnalyticsProcessor
-         1   app-services|custom-domain-app-manager-us-jcubh
-         1   ScheduledLinkStatusChecker
-         1   MongoDB Monitoring Module v13.17.2.8878 (git: 70c0b932f47f4f0b3e82a75e223f39ed9635b47f)
-         1   SEODescriptionGenerator
 ```
 
 **Example 8**
@@ -223,53 +133,6 @@ logic: using the linux `cat` function pipe the contents of the mongod logs into 
 ```bash
 % cat mongodb.log.2024-06-11T02-49-10 | jsonFetcher -b 20240601000000 -e 20240630000000 | docsExamined | phead -r 3 | formatOne | vscode
 
-Submission Time      = 2024-06-10T13:51:23.220+00:00
-command              = {'find': 'things_journal', 'filter': {'$and': [{'pid': 'thing:io.beyonnex.smartheating.srt:eui001bc507316c3aed'}, {'to': {'$gte': 12396}}, {'from': {'$lte': 12496}}]}, 'sort': {'to': 1}, 'batchSize': 1, 'singleBatch': True, 'maxTimeMS': 1000, '$readPreference': {'mode': 'secondaryPreferred'}, 'readConcern': {'level': 'local'}, '$db': 'ddm-mongo-prod'}
-
-
-ns|name space        = ddm-mongo-prod.things_journal
-planSummary          = IXSCAN { pid: 1, to: -1 }
-keysExamined         = 15
-docsExamined         = 15
-queryHash            = BAB5A1C8
-numYields            = 3
-nreturned            = 0
-durationMillis       = 44
-remote               = 192.168.242.223:39838
-bytesRead            = 1660576
------------------------------------------------------------------------------------------------------
-
-Submission Time      = 2024-06-10T13:51:23.220+00:00
-command              = {'find': 'things_journal', 'filter': {'$and': [{'pid': 'thing:io.beyonnex.smartheating.srt:eui001bc507316c3aed'}, {'to': {'$gte': 12396}}, {'from': {'$lte': 12496}}]}, 'sort': {'to': 1}, 'batchSize': 1, 'singleBatch': True, 'maxTimeMS': 1000, '$readPreference': {'mode': 'secondaryPreferred'}, 'readConcern': {'level': 'local'}, '$db': 'ddm-mongo-prod'}
-
-
-ns|name space        = ddm-mongo-prod.things_journal
-planSummary          = IXSCAN { pid: 1, to: -1 }
-keysExamined         = 15
-docsExamined         = 15
-queryHash            = BAB5A1C8
-numYields            = 3
-nreturned            = 0
-durationMillis       = 44
-remote               = 192.168.242.223:39838
-bytesRead            = 1660576
------------------------------------------------------------------------------------------------------
-
-Submission Time      = 2024-06-10T22:09:17.573+00:00
-command              = {'find': 'things_snaps', 'filter': {'pid': 'thing:io.beyonnex.room-group:d88163f2-53de-4717-ad95-9ebe0c2d3cba'}, 'sort': {'sn': 1}, 'limit': 1, 'batchSize': 1, 'singleBatch': True, 'maxTimeMS': 1000, '$readPreference': {'mode': 'secondaryPreferred'}, 'readConcern': {'level': 'local'}, '$db': 'ddm-mongo-prod'}
-
-
-ns|name space        = ddm-mongo-prod.things_snaps
-planSummary          = IXSCAN { pid: 1, sn: -1, ts: -1 }
-keysExamined         = 1
-docsExamined         = 1
-queryHash            = 64040B05
-numYields            = 0
-nreturned            = 1
-durationMillis       = 39
-remote               = 192.168.242.223:59302
-bytesRead            = 26832
------------------------------------------------------------------------------------------------------
 ```
 
 **Example 9**
@@ -280,7 +143,7 @@ logic: using the linux `cat` function pipe the contents of the mongod logs into 
  stdin/pipe, by generating a bash script, calling it and piping to vscode
 
 ```bash
-% cat mongodb.log.2024-06-11T02-49-10 | jsonFetcher -b 20240101000000 -e 20250101000000 |  convertLogs | mkConsh; bash connStats.sh | vscode
+% cat mongodb.log| jsonFetcher -b 20240101000000 -e 20250101000000 |
 
      source: /tmp/tmp4se7_cx3
        host: atlas-vvn46p-shard-00-00.lxayk.mongodb.net:27017
@@ -591,10 +454,4 @@ logic: using the linux `cat` function pipe the contents of the mongod logs into 
 
 **Index Aggregations** 
 
-Name Space                                Index                                                              Count 
-----------------------------------------  ----------------------------------------                      ---------- 
-document360-prod.versions                 IXSCAN { _id: 1 }                                                    118 
-document360-prod.versions                 IDHACK                                                                26 
-document360-prod.variable                 IXSCAN { projectId: 1, createdAt: -1 }                                10 
-document360-prod.users                    IXSCAN { emailId: 1 }                                              11899 
 ```
