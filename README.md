@@ -12,13 +12,16 @@ pip install virtualenv
 mkdir mshell
 cd mshell
 python3 -m venv mongo-shell
+cd mongo-shell
 source bin/activate
+export PYTHON_BIN=`which python3`
 ```
 
 ```bash
 # clone respository
 git clone https://github.com/Dennis-Spera/mongodb-bash-shell.git
 cd mongodb-bash-shell
+export MSHELL=$PWD
 bash mkSetup.sh
 execute the screen output (environmental variables, and aliases)
 pip install -r requirements.txt
@@ -126,7 +129,7 @@ logic: using the linux `cat` function pipe the contents of the mongod logs into 
  and then pipe it to a vscode tab.
  
 ```bash
-% cat mongodb.log | jsonFetcher -b 20240601000000 -e 20240630000000 | docsExamined | phead -r 3 | formatOne | vscode
+% cat mongodb.log | jsonFetcher -b 20200601000000 -e 20250630000000 | docsExamined | phead -r 3 | formatOne | vscode
 
 ```
 
@@ -160,7 +163,7 @@ logic: using the linux `cat` function pipe the contents of the mongod logs into 
  logs 5.+ to 4.4 (generate_mplot_logs.py was modified to allow piped input) and will pipe that into mplotqueries.py using a bash script
 
 ```bash
-% cat mongodb.log.2024-06-11T02-49-10 | jsonFetcher -b 20240101000000 -e 20250101000000 |  convertLogs | mplot
+% cat mongodb.log | jsonFetcher -b 20240101000000 -e 20250101000000 |  convertLogs | mplot
 ```
 
 **Example 12 - piping into multiple filters collScans, millis -- collections scans sorted by millisreconds high to low**

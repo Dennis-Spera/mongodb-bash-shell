@@ -2,11 +2,6 @@
 
 # setup for shell
 
-bash <<EOF
-echo "
-export MSHELL=$PWD
-export PATH=$PATH:$MSHELL
-export PYTHON_BIN=`which python3`
 alias jsonFetcher='$PYTHON_BIN $MSHELL/jsonFetcher.py'
 alias countCommands='$PYTHON_BIN $MSHELL/countCommands.py'
 alias millis='$PYTHON_BIN $MSHELL/millis.py'
@@ -27,6 +22,5 @@ alias drivers='$PYTHON_BIN $MSHELL/drivers.py'
 alias ns='$PYTHON_BIN $MSHELL/ns.py'
 alias indexes='$PYTHON_BIN $MSHELL/nsIndexes.py'
 alias queryHash='$PYTHON_BIN $MSHELL/queryHash.py'
-"
-EOF
+
 
