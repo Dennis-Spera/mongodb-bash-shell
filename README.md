@@ -23,7 +23,6 @@ git clone https://github.com/Dennis-Spera/mongodb-bash-shell.git
 cd mongodb-bash-shell
 export MSHELL=$PWD
 bash mkSetup.sh
-execute the screen output (environmental variables, and aliases)
 pip install -r requirements.txt
 ```
 
