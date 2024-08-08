@@ -2,8 +2,8 @@
 
 **Setup**
 
-**virtual environment**
-**----------------------**
+**test in virtual environment**
+**---------------------------**
 
 
 ```bash
@@ -14,7 +14,6 @@ cd mshell
 python3 -m venv mongo-shell
 cd mongo-shell
 source bin/activate
-export PYTHON_BIN=`which python3`
 ```
 
 ```bash
@@ -25,6 +24,24 @@ export MSHELL=$PWD
 bash mkSetup.sh
 pip install -r requirements.txt
 ```
+**add to your normal environment**
+**------------------------------**
+
+```bash
+source bin/deactivate
+rm -rf mshell
+git clone https://github.com/Dennis-Spera/mongodb-bash-shell.git
+cd mongodb-bash-shell
+add to end of your .zprofile
+export MSHELL=full path of mongodb-bash-shell directory
+add all the aliases contained in mkSetup.sh
+```
+
+
+
+
+
+
 
 **Inventory of files**
 
