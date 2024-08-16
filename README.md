@@ -70,7 +70,7 @@ add all the aliases contained in mkSetup.sh
 24. **queryHash.py** - list query shapes (query shapes) and counts
 25. **README.md** - this file
 26. **vscode.py** - pipe standard out to a vscode tab
-
+27. **loadvs-pkg.sh** - script to load all files into vscode tabs
 
 
 **Example 1 - count the number of json entries for the date range**
