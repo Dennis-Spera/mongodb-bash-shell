@@ -1,4 +1,4 @@
-## The enclosed commands are designed to closely integrate with other shell commands. 
+## The package is designed to interact with the other commands found documented here. Concidering this is meant to be used as a pipeline, these pipelines can also interact with other linux command when used in the correct context. Some of these commands are designed to interact with streaming json similiar to client-server they have to be in the right format to be used together. These commands would be bytesRead, collScans, docsExamined, jsonFetcher, keysExamined, millis and ns.   
 
 **Setup**
 
@@ -34,14 +34,10 @@ git clone https://github.com/Dennis-Spera/mongodb-bash-shell.git
 cd mongodb-bash-shell
 add to end of your .zprofile
 export MSHELL=full path of mongodb-bash-shell directory
-add all the aliases contained in mkSetup.sh
+add all the functions contained in mkSetup.sh
+pip install -r requirements.txt
+source $HOME/.zprofile
 ```
-
-
-
-
-
-
 
 **Inventory of files**
 
@@ -57,20 +53,21 @@ add all the aliases contained in mkSetup.sh
 10. **formatOne.py** - format the piped json displaying releavant data stripping off unnecessary data 
 11. **jsonFetcher.py** - returns all the json that fall between a begin date and end date
 12. **keysExamined.py** - sort json by keysExamined
-14. **millis.py** - sort json by milliseconds
-15. **mkConsh.py** - makes shell script used to extract connection info
-16. **mkRSsh.py** - makes shell script used to extract replication info
-17. **mkSetup.sh** - makes the environment for appending to your profile
-18. **mplot.py** - execute `mplotqueries.py` based on piped input
-19. **mloginfo.py** - legacy script cloned to this repository for convenience
-20. **mplotqueries.py** - legacy script cloned to this repository for convenience
-21. **nsIndexes.py** - list the indexes used by namespace with a count
-22. **ns.py** - sort json by namespace
-23. **phead.py** - the installed head command sends a `SIGTERM` to cat command, this is the python version
-24. **queryHash.py** - list query shapes (query shapes) and counts
-25. **README.md** - this file
-26. **vscode.py** - pipe standard out to a vscode tab
-27. **loadvs-pkg.sh** - script to load all files into vscode tabs
+13. **millis.py** - sort json by milliseconds
+14. **mkConsh.py** - makes shell script used to extract connection info
+15. **mkSetup.sh** - makes the environment for appending to your profile
+16. **mplot.py** - execute `mplotqueries.py` based on piped input
+17. **mplotqueries.py** - legacy script cloned to this repository for convenience
+18. **nsIndexes.py** - list the indexes used by namespace with a count
+19. **ns.py** - sort json by namespace
+20. **phead.py** - the installed head command sends a `SIGTERM` to cat command, this is the python version
+21. **queryHash.py** - list query shapes (query shapes) and counts
+22. **README.md** - this file
+23. **vscode.py** - pipe standard out to a vscode tab
+24. **loadvs-pkg.sh** - script to load all files into vscode tabs
+25. **test.sh** - script with 3 tests using jq to validate
+
+
 
 
 **Example 1 - count the number of json entries for the date range**
@@ -161,18 +158,7 @@ logic: using the linux `cat` function pipe the contents of the mongod logs into 
 
 ```
 
-**Example 10 - get replication info (beta)**
-
-logic: using the linux `cat` function pipe the contents of the mongod logs into the jsonFetcher which will use datetime
- to calculate which json entries correspond to the specified time frame and then pass that to convertLogs to convert
- logs 5.+ to 4.4 (generate_mplot_logs.py was modified to allow piped input) and will pipe that into mloginfo.py using a bash script and piping to vscode
-
-```bash
-% cat mongodb.log | jsonFetcher -b 20240101000000 -e 20250101000000 |  convertLogs | mkRSsh; bash rsInfo.sh | vscode
-
-```
-
-**Example 11 - piping into mplotqueries.py**
+**Example 10 - piping into mplotqueries.py**
 
 logic: using the linux `cat` function pipe the contents of the mongod logs into the jsonFetcher which will use datetime
  to calculate which json entries correspond to the specified time frame and then pass that to convertLogs to convert
@@ -182,7 +168,7 @@ logic: using the linux `cat` function pipe the contents of the mongod logs into 
 % cat mongodb.log | jsonFetcher -b 20240101000000 -e 20250101000000 |  convertLogs | mplot
 ```
 
-**Example 12 - piping into multiple filters collScans, millis -- collections scans sorted by millisreconds high to low**
+**Example 11 - piping into multiple filters collScans, millis -- collections scans sorted by millisreconds high to low**
 
 logic: using the linux `cat` function pipe the contents of the mongod logs into the jsonFetcher which will use datetime
  to calculate which json entries correspond to the specified time frame and then pass that to collScans to millis to phead 
@@ -192,7 +178,7 @@ logic: using the linux `cat` function pipe the contents of the mongod logs into 
 % cat mongodb.log | jsonFetcher -b 20220601000000 -e 20250630000000 | collScans | millis | phead -r 3 | formatOne | vscode
 
 ```
-**Example 13 - list drivers and counts**
+**Example 12 - list drivers and counts**
 
 logic: using the linux `cat` function pipe the contents of the mongod logs into the jsonFetcher which will use datetime
  to calculate which json entries correspond to the specified time frame and then pipe that to drivers and pipe to vscode
@@ -202,7 +188,7 @@ logic: using the linux `cat` function pipe the contents of the mongod logs into 
 
 ```
 
-**Example 14 - sorting by namespace**
+**Example 13 - sorting by namespace**
 
 logic: using the linux `cat` function pipe the contents of the mongod logs into the jsonFetcher which will use datetime
  to calculate which json entries correspond to the specified time frame and then pipe that to millis to sort to milliseconds
@@ -213,7 +199,7 @@ logic: using the linux `cat` function pipe the contents of the mongod logs into 
 % cat mongodb.log | jsonFetcher -b 20240101000000 -e 20250101000000 | millis | phead -r 10 | ns | formatOne | vscode
 ```
 
-**Example 15 - extract indexes with counts**
+**Example 14 - extract indexes with counts**
 
 logic: using the linux `cat` function pipe the contents of the mongod logs into the jsonFetcher which will use datetime
  to calculate which json entries correspond to the specified time frame and then pipe that to indexes to get indexes by 
@@ -223,3 +209,9 @@ logic: using the linux `cat` function pipe the contents of the mongod logs into 
 % cat mongodb.log | jsonFetcher -b 20240101000000 -e 20250101000000 | indexes | vscode
 
 ```
+
+**Addendum**
+
+You may need to add the following to invoke vscode and load a file
+
+code () { VSCODE_CWD="$PWD" open -n -b "com.microsoft.VSCode" --args $* ;}
