@@ -26,30 +26,28 @@ for line in sys.stdin:
 sys.stdin.close()
 
 queryHash = list()
+queryHashCmd = list()
 for json in jsonFile:
     if json['c'] == 'COMMAND':
       try:
-        #queryHash.append({'json':j.dumps(json),'queryHash':json['attr']['queryHash']})
         queryHash.append(json['attr']['queryHash'])        
+        queryHashCmd.append({json['attr']['queryHash']:json['attr']['command']})
       except:
        pass
-       
-#try:       
-# sorted_list = sorted(queryHash, key=lambda x: x['queryHash'], reverse=True)
-#
-# for element in sorted_list:
-#     print(element['json']) 
-#except:
-#   sys.stderr.write('No useable data found'+"\n")
-
-
 
 queryHashTotals = dict(Counter(queryHash))
 sortedByKey = OrderedDict(sorted(queryHashTotals.items()))
 sortedByValue = {k: v for k, v in sorted(queryHashTotals.items(), key=lambda item: item[1], reverse=True)}
 
-print("{:>10}   {:<10}".format('Count', 'queryHash'))
-print("{:>10}   {:<10}".format('-----', '----------------------'))
+print("{:>10}   {:<10}   {:<10}".format('Count', 'queryHash', 'command'))
+print("{:>10}   {:<10}   {:<10}".format('-----', '---------','------------------------'))
 
+def getCommand(qh):
+  for d in queryHashCmd: 
+      for k,v in d.items():
+          if k == qh:
+             return(v)
+  
 for k,v in sortedByValue.items():
-    print("{:>10}   {:<10}".format(v, k))    
+    print("{:>10}   {:<10}".format(v, k),end='')    
+    print(str(getCommand(k))[0:150],' ....')
