@@ -21,6 +21,13 @@ import sys
 import json as j
 from commandlines import Command as cmd
 
+def is_json(json):
+    try:
+        j.loads(json)
+    except ValueError:
+        return False
+    return True
+
 r = str()
 
 try:

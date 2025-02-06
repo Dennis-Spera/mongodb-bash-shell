@@ -5,15 +5,6 @@
  File: appName.py
  Author: Dennis Spera
  Date: 2024-06-24
- Description: Extract appName totals from mongod.log on stdin.
-
-"""
-
-"""
-
- File: appName.py
- Author: Dennis Spera
- Date: 2024-06-24
  Description: 
   1.) Extract appName totals from mongod.log on stdin.
   2.) appnames will be both user and system appnames.

@@ -24,6 +24,13 @@ import json, sys
 import json as j
 from commandlines import Command as cmd
 
+def is_json(json):
+    try:
+        j.loads(json)
+    except ValueError:
+        return False
+    return True
+
 ge = int()
 c = cmd()
 try:
@@ -39,7 +46,8 @@ except:
 jsonFile = list()
 
 for line in sys.stdin:
-    jsonFile.append( j.loads(line))
+    if is_json(line):
+       jsonFile.append( j.loads(line))
 sys.stdin.close()
 
 cpuNanos = list()

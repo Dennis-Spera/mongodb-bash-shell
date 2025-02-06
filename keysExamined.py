@@ -20,10 +20,18 @@ import json, sys
 from collections import Counter
 import json as j
 
+def is_json(json):
+    try:
+        j.loads(json)
+    except ValueError:
+        return False
+    return True
+
 jsonFile = list()
 
 for line in sys.stdin:
-    jsonFile.append( j.loads(line))
+    if is_json(line):
+       jsonFile.append( j.loads(line))
 sys.stdin.close()
 
 keysExamined = list()

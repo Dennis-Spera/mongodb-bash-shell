@@ -18,11 +18,19 @@
 import json, sys
 from collections import Counter
 
+def is_json(json):
+    try:
+        j.loads(json)
+    except ValueError:
+        return False
+    return True
+
 jsonFile = list()
 
 for line in sys.stdin:
-    data = json.loads(line)
-    jsonFile.append(data)
+    if is_json(line):
+       data = json.loads(line)
+       jsonFile.append(data)
 
 sys.stdin.close()
 

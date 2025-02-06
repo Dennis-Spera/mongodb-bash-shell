@@ -26,6 +26,12 @@ from collections import Counter
 from tabulate import tabulate
 from commandlines import Command as cmd
 
+def is_json(json):
+    try:
+        j.loads(json)
+    except ValueError:
+        return False
+    return True
 
 class formatOutput:
     def __init__(self):
@@ -100,10 +106,11 @@ jsonFile = list()
 ptr=0
 for line in sys.stdin:
    ptr+=1
-   try: 
-    jsonFile.append( j.loads(line))
-   except:
-    sys.stderr.write('rec #'+str(ptr)+' invalid json bypassed')
+   if is_json(line):
+      try: 
+        jsonFile.append( j.loads(line))
+      except:
+        sys.stderr.write('rec #'+str(ptr)+' invalid json bypassed')
 sys.stdin.close()
 
 ns = list()

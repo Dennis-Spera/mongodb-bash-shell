@@ -21,11 +21,19 @@ import json as j
 from collections import Counter
 import re as regex
 
+def is_json(json):
+    try:
+        j.loads(json)
+    except ValueError:
+        return False
+    return True
+
 jsonFile = list()
 
 for line in sys.stdin:
   try:
-    jsonFile.append( j.loads(line))
+    if is_json(line):
+       jsonFile.append( j.loads(line))
   except:
     pass
   

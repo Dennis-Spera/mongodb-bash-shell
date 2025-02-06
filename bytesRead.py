@@ -11,6 +11,7 @@
  Change Log:
   1. 2024-06-24 - Initial 
   2. 2024-07-17 - reworded comments, removed unused modules
+  3. 2025-02-05 - add is_json as added check when jsonFetcher is not used
 
  Testing: 
   1. Not defined
@@ -21,8 +22,16 @@ import json as j
 
 jsonFile = list()
 
+def is_json(json):
+    try:
+        j.loads(json)
+    except ValueError:
+        return False
+    return True
+
 for line in sys.stdin:
-    jsonFile.append( j.loads(line))
+    if is_json(line):
+       jsonFile.append( j.loads(line))
 sys.stdin.close()
 
 bytesRead = list()
@@ -32,7 +41,7 @@ for json in jsonFile:
         bytesRead.append({'json':j.dumps(json),'bytesRead':json['attr']['storage']['data']['bytesRead']})
       except:
        pass
-       
+
 try:       
  sorted_list = sorted(bytesRead, key=lambda x: x['bytesRead'], reverse=True)
 
