@@ -5,6 +5,15 @@
  File: appName.py
  Author: Dennis Spera
  Date: 2024-06-24
+ Description: Extract appName totals from mongod.log on stdin.
+
+"""
+
+"""
+
+ File: appName.py
+ Author: Dennis Spera
+ Date: 2024-06-24
  Description: 
   1.) Extract appName totals from mongod.log on stdin.
   2.) appnames will be both user and system appnames.
@@ -16,14 +25,23 @@
   1. Not defined
 """
 
-import json, sys
+import json as j, sys
 from collections import Counter
+
+def is_json(json):
+    try:
+        j.loads(json)
+    except ValueError:
+        return False
+    return True
+
 
 jsonFile = list()
 
 for line in sys.stdin:
-    data = json.loads(line)
-    jsonFile.append(data)
+    if is_json(line):
+       data = j.loads(line)
+       jsonFile.append(data)
 
 sys.stdin.close()
 

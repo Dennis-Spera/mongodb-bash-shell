@@ -63,7 +63,9 @@ for json in jsonFile:
         except: pass
         try: print("{:<20} {:<1} {:>0}".format('nreturned  ', '=', json['attr']['nreturned']))
         except: pass 
-        try: print("{:<20} {:<1} {:>0}".format('durationMillis ', '=', json['attr']['durationMillis']))
+        try: print("{:<20} {:<1} {:>0}".format('durationMillis ', '=', json['attr']['durationMillis']))       
+        except: pass 
+        try: print("{:<20} {:<1} {:>0}".format('cpuNanos', '=', json['attr']['cpuNanos']))       
         except: pass 
         try: print("{:<20} {:<1} {:>0}".format('remote ', '=', json['attr']['remote']))
         except: pass 

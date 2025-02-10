@@ -15,7 +15,7 @@
 
 """
 
-import json, sys
+import json as j, sys
 from collections import Counter
 
 def is_json(json):
@@ -29,7 +29,7 @@ jsonFile = list()
 
 for line in sys.stdin:
     if is_json(line):
-       data = json.loads(line)
+       data = j.loads(line)
        jsonFile.append(data)
 
 sys.stdin.close()
